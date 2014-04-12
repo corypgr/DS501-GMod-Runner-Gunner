@@ -1,0 +1,17 @@
+"RunnerGunner"
+{
+	"base"		"base"
+	"title"		"RunnerGunner"
+	"version"	"1.0.0"
+	"menusystem"	"1"
+
+	"author_name"	""
+	"author_email"	""
+	"author_url"	""
+
+	"maps"		"^gm_"
+
+	"icons"		""
+	"info"		""
+	"hide"		"0"
+}
