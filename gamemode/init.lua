@@ -3,13 +3,9 @@ AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
 
-function GM:PlayerLoadout( pl )
- 
-    pl:Give( "weapon_pistol" )
-    pl:Give( "weapon_smg1" )
-    pl:Give( "weapon_crowbar" )
- 
-    pl:GiveAmmo( 999, "pistol" )
-    pl:GiveAmmo( 999, "smg1" )
- 
+DEFINE_BASECLASS( "gamemode_base" )
+
+function GM:PlayerSpawn( ply )
+	player_manager.SetPlayerClass( ply, "player_gunner" )
+	BaseClass.PlayerSpawn( self, ply )
 end
