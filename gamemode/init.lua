@@ -11,12 +11,15 @@ function GM:PlayerSpawn( ply )
 end
 
 function GM:InitPostEntity()
-	for i = 0,200,1 do
-		local zombie = ents.Create( "npc_zombie" )
-		zombie:SetPos( Vector(math.random(-1000,1000), math.random(-1000,1000), 500 ) )
-		zombie:Spawn()
-		-- Make the zombie ignore the players
-		zombie:AddRelationship( "player D_NU 10" )
+	for i = 0,10,1 do
+		for k = 0,10,1 do
+			local zombie = ents.Create( "npc_alyx" )
+			zombie:SetPos( Vector(60*i, 60*k, 0 ) )
+			zombie:Spawn()
+			-- Make the zombie ignore the players
+			zombie:AddRelationship( "player D_NU 10" )
+			zombie:Give("weapon_alyxgun")
+		end
 	end
 	print( "All Entities have initialized\n" )
 end
