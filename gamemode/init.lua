@@ -5,7 +5,7 @@ include("shared.lua")
 
 DEFINE_BASECLASS( "gamemode_base" )
 
---Controls the probablility weight for how long an NPC will stand still
+--Controls the probability weight for how long an NPC will stand still
 stand_weight = 10
 --Controls the max distance that an NPC will randomly walk to
 walk_weight = 500
@@ -33,17 +33,31 @@ function GM:InitPostEntity()
 			local npc_c = ents.Create( npc_model )
 			npc_c:SetPos( Vector(60*i, 60*k, 0 ) )
 			npc_c:Spawn()
-			-- Make the zombie ignore the players
+			-- Make the npc ignore the players
 			npc_c:AddRelationship( "player D_NU 10" )
+			
+			-- Think is a function that is called every few frames.
 			hook.Add("Think", "NPCThink " .. tostring(npc_c), function()
+				
+				-- Only do something new when the npc is not moving. Also, if the schedule
+				-- is set to SCHED_NONE, randomly decide when to start a new schedule
 				if(npc_c:GetMovementActivity() == -1 and 
 				  (not npc_c:IsCurrentSchedule(SCHED_NONE) or math.random(1,stand_weight) == 1)) then
-					local npc_pos = npc_c:GetPos()
-					npc_pos:Add(Vector(math.random(-1*walk_weight,walk_weight), math.random(-1*walk_weight,walk_weight), 0))
-					npc_c:SetLastPosition(npc_pos) 
-					-- Note that SCHED_FORCED_GO and SCHED_FORCED_GO_RUN are next to each other.
+					
+					--Randomly choose the next action
 					local actionList = {SCHED_NONE, SCHED_FORCED_GO, SCHED_FORCED_GO_RUN}
-					npc_c:SetSchedule( actionList[math.random(1,3)] )
+					local newSched = actionList[math.random(1,3)]
+					
+					if(newSched != SCHED_NONE) then
+						-- This sets a new location for the NPC to a random position near the npc
+						local npc_pos = npc_c:GetPos()
+						npc_pos:Add(Vector(math.random(-1*walk_weight,walk_weight), math.random(-1*walk_weight,walk_weight), 0))
+						npc_c:SetLastPosition(npc_pos) 
+					end
+					
+					-- Use the Randomly chosen schedule to either stand still, 
+					-- walk to the new location, or run to the new location.
+					npc_c:SetSchedule( newSched )
 				end
 			end);
 		end
@@ -66,12 +80,17 @@ end
 function GM:EntityTakeDamage( ent, dmgInfo )
     local attacker = dmgInfo:GetAttacker()
 	if ent:IsNPC() and ent:GetEnemy() != attacker then
+		
+		-- Stop the random walks
 		hook.Remove("Think", "NPCThink " .. tostring(ent))
 		ent:StopMoving()
+		
 		ent:Give( npc_weapon )
+		
 		-- The npc will now only attack the entity that attacked it
 		ent:AddEntityRelationship(attacker, D_HT, 99 )
 		ent:SetEnemy(attacker)
+		
 		-- This lets the npc find you faster
 		ent:UpdateEnemyMemory( attacker, attacker:GetPos() )
 		print("relationship changed")
