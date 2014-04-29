@@ -5,6 +5,12 @@ include("shared.lua")
 
 DEFINE_BASECLASS( "gamemode_base" )
 
+--Controls the probablility weight for how long an NPC will stand still
+stand_weight = 10
+
+--Controls the max distance that an NPC will randomly walk to
+walk_weight = 500
+
 util.PrecacheModel( "models/alyx.mdl" )
 function GM:PlayerSpawn( ply )
 	player_manager.SetPlayerClass( ply, "player_runner" )
@@ -22,9 +28,9 @@ function GM:InitPostEntity()
 			zombie:AddRelationship( "player D_NU 10" )
 			hook.Add("Think", "NPCThink " .. tostring(zombie), function()
 				if(zombie:GetMovementActivity() == -1 and 
-				  (not zombie:IsCurrentSchedule(SCHED_NONE) or math.random(1,10) == 1)) then
+				  (not zombie:IsCurrentSchedule(SCHED_NONE) or math.random(1,stand_weight) == 1)) then
 					local poss = zombie:GetPos()
-					poss:Add(Vector(math.random(-500,500),math.random(-500,500),0))
+					poss:Add(Vector(math.random(-1*walk_weight,walk_weight),math.random(-1*walk_weight,walk_weight),0))
 					zombie:SetLastPosition(poss) 
 					-- Note that SCHED_FORCED_GO and SCHED_FORCED_GO_RUN are next to each other.
 					local actionList = {SCHED_NONE,SCHED_FORCED_GO, SCHED_FORCED_GO_RUN}
