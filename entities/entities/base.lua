@@ -13,6 +13,6 @@ end
 
 function ENT:Touch( hitEnt )
  	if ( hitEnt:IsValid() and hitEnt:IsPlayer() ) then
- 		print(hitEnt)
+ 		print(hitEnt +"is touching the base inapproriately")
 	end
  end
