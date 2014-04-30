@@ -15,6 +15,11 @@ function GM:PlayerSetModel( ply )
 end
 
 function GM:InitPostEntity()
+
+	local base = ents.Create("base")
+	base:SetPos( Vector(366, -588, -333 ) )
+	base:Spawn()
+	
 	for i = 0,3,1 do
 		for k = 0,3,1 do
 			local npc_c = ents.Create( npc_model )
