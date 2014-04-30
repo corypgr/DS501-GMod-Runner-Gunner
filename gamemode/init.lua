@@ -3,6 +3,7 @@ AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
 
+
 DEFINE_BASECLASS( "gamemode_base" )
 
 function GM:PlayerSpawn( ply )
@@ -11,6 +12,11 @@ function GM:PlayerSpawn( ply )
 end
 
 function GM:InitPostEntity()
+
+	local base = ents.Create("base")
+	base:SetPos( Vector(366, -588, -333 ) )
+	base:Spawn()
+
 	for i = 0,10,1 do
 		for k = 0,10,1 do
 			local zombie = ents.Create( "npc_alyx" )
@@ -21,6 +27,7 @@ function GM:InitPostEntity()
 			zombie:Give("weapon_alyxgun")
 		end
 	end
+
 	print( "All Entities have initialized\n" )
 end
 
