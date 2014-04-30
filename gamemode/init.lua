@@ -18,10 +18,15 @@ function GM:InitPostEntity()
             zombie:Spawn()
             -- Make the zombie ignore the players
             zombie:AddRelationship( "player D_NU 10" )
+            zombie:AddRelationship( "npc_zombie D_NU 10" )
             zombie:Give("weapon_alyxgun")
             zombie:SetCurrentWeaponProficiency( WEAPON_PROFICIENCY_POOR);
         end
     end
+
+    local ent = ents.Create("weapon_crowbar") 
+    ent:SetPos(Vector(-10,-10, 0)) 
+    ent:Spawn()
 
     print( "All Entities have initialized\n" )
 
@@ -34,25 +39,28 @@ hook.Add( "InitPostEntity", "zombie_spawn", function()
 function GM:EntityTakeDamage( ent, dmgInfo )
 
 local attacker = dmgInfo:GetAttacker()
-    if ent:IsNPC() and ent:GetEnemy() != attacker then
-    -- The zombie will now only attack the player that shot it
-    ent:AddEntityRelationship(attacker, D_HT, 99 )
-ent:SetEnemy(attacker)
-    -- This lets the zombie find you faster
-ent:UpdateEnemyMemory( attacker, attacker:GetPos() )
-    print("relationship changed")
+    if dmgInfo:GetInflictor():GetName() == "weapon_crowbar" then
+         ent:AddEntityRelationship(attacker, D_LI, 99 )
+    else if ent:IsNPC() and ent:GetEnemy() != attacker then
+        -- The zombie will now only attack the player that shot it
+        ent:AddEntityRelationship(attacker, D_HT, 99 )
+        ent:SetEnemy(attacker)
+        -- This lets the zombie find you faster
+        ent:UpdateEnemyMemory( attacker, attacker:GetPos() )
+        print("relationship changed")
     end
     end
+end
 
-    local AmmoList = {
-        "item_ammo_pistol",
-        "item_ammo_smg1",
-        "item_ammo_ar2",
-        "item_ammo_357",
-        "item_ammo_crossbow",
-        "item_box_buckshot",
-        "item_rpg_round"
-    }
+local AmmoList = {
+    "item_ammo_pistol",
+    "item_ammo_smg1",
+    "item_ammo_ar2",
+    "item_ammo_357",
+    "item_ammo_crossbow",
+    "item_box_buckshot",
+    "item_rpg_round"
+}
 
 local LowList = {
     "item_battery",
