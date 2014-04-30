@@ -5,26 +5,13 @@ include("shared.lua")
 
 DEFINE_BASECLASS( "gamemode_base" )
 
---Controls the probability weight for how long an NPC will stand still
-stand_weight = 10
---Controls the max distance that an NPC will randomly walk to
-walk_weight = 500
---Type of NPC
-npc_model = "npc_alyx"
---Type of NPC weapon
-npc_weapon = "weapon_alyxgun"
---Player model location
-ply_model = "models/alyx.mdl"
---Type of Player weapon
-ply_weapon = "weapon_smg1"
-ply_weapon_short = "smg1"
-ply_ammo_amount = 256
-
-util.PrecacheModel( ply_model )
 function GM:PlayerSpawn( ply )
-	player_manager.SetPlayerClass( ply, "player_runner" )
-	ply:SetModel( ply_model )
+	player_manager.SetPlayerClass( ply, "player_custom" )
 	BaseClass.PlayerSpawn( self, ply )
+end
+
+function GM:PlayerSetModel( ply )
+    ply:SetModel( ply_model )
 end
 
 function GM:InitPostEntity()
@@ -38,6 +25,8 @@ function GM:InitPostEntity()
 			
 			-- Think is a function that is called every few frames.
 			hook.Add("Think", "NPCThink " .. tostring(npc_c), function()
+				-- Below can be used to figure out how fast the NPC walks/runs
+				--print(tostring(npc_c:GetGroundSpeedVelocity( ):Length()))
 				
 				-- Only do something new when the npc is not moving. Also, if the schedule
 				-- is set to SCHED_NONE, randomly decide when to start a new schedule
@@ -70,9 +59,9 @@ function GM:KeyPress( ply, key )
     if ( key == IN_USE) then
 		if(table.Count( ply:GetWeapons()) == 0) then
 			ply:Give( ply_weapon )
-			ply:GiveAmmo( ply_ammo_amount,	ply_weapon_short )
+			--ply:GiveAmmo( ply_ammo_amount,	ply_weapon_short )
 		else
-			ply:RemoveAllItems()
+			ply:StripWeapons()
 		end
     end
 end
