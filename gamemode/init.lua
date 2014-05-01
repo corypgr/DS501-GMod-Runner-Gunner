@@ -54,16 +54,26 @@ function GM:InitPostEntity()
 	print( "All Entities have initialized\n" )
 end
 
-function GM:KeyPress( ply, key )
-	--IN_USE is mapped to e
-    if ( key == IN_USE) then
+function GM:PlayerButtonDown( ply, button )
+
+    if ( button == KEY_E) then
 		if(table.Count( ply:GetWeapons()) == 0) then
 			ply:Give( ply_weapon )
 			--ply:GiveAmmo( ply_ammo_amount,	ply_weapon_short )
 		else
 			ply:StripWeapons()
 		end
-    end
+	elseif( button == KEY_T ) then
+		local ent = ply:GetEyeTrace().Entity;
+		if (ent:IsNPC()) then
+			-- Stops the schedule so the NPC does not walk back to your location
+			ent:ClearSchedule()
+			
+			local npcPos = ent:GetPos()
+			ent:SetPos(ply:GetPos())
+			ply:SetPos(npcPos)
+		end
+	end
 end
 
 function GM:EntityTakeDamage( ent, dmgInfo )
