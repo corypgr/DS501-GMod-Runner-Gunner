@@ -12,28 +12,26 @@ end
 function GM:InitPostEntity()
     for i = 0,10,1 do
         for k = 0,10,1 do
-            local zombie = ents.Create( "npc_zombie" )
+            local zombie
+            if k % 2 == 0 then
+            zombie= ents.Create( "npc_fastzombie" )
+            elseif k % 4 == 0 then
+             zombie= ents.Create( "npc_poisonzombie" )
+            else  
+            zombie= ents.Create( "npc_zombie" )
+            end 
             zombie:SetPos( Vector(60*i, 60*k, 0 ) )
             zombie:Spawn()
             -- Make the zombie ignore the players
-            zombie:AddRelationship( "player D_NU 10" )
+            zombie:AddRelationship( "player D_HT 10" )
             zombie:AddRelationship( "npc_zombie D_NU 10" )
-          zombie:Give("weapon_crowbar")
           --  zombie:Give("weapon_alyxgun")
 --            zombie:SetCurrentWeaponProficiency( WEAPON_PROFICIENCY_POOR);
         end
     end
 
     local ent = ents.Create("weapon_crowbar") 
-    ent:SetPos(Vector(-10,-10, 0)) 
-    ent:Spawn()
-
-    local ent = ents.Create("npc_helicopter") 
-    ent:SetPos(Vector(-50,-50, 200)) 
-    ent:Spawn()
-
-    local ent = ents.Create("npc_ichthyosaur") 
-    ent:SetPos(Vector(-100,-100, 500)) 
+    ent:SetPos(Vector(-20,-20, 0)) 
     ent:Spawn()
 
     local ent = ents.Create("npc_combinegunship") 
@@ -54,7 +52,7 @@ function GM:EntityTakeDamage( ent, dmgInfo )
 local attacker = dmgInfo:GetAttacker()
         print(dmgInfo:GetAmmoType())
 
-    if dmgInfo:GetAmmoType() == -1 then
+    if dmgInfo:GetDamageType() == DMG_CLUB then -- dmgInfo:GetAmmoType() == -1 then
          ent:AddEntityRelationship(attacker, D_LI, 99 )
     elseif ent:IsNPC() and ent:GetEnemy() != attacker then
         -- The zombie will now only attack the player that shot it
@@ -81,16 +79,11 @@ local LowList = {
     "item_healthkit",
     "item_healthvial",
     "weapon_pistol",
-    "weapon_smg1",
-    "weapon_frag",
-    "weapon_annabelle",
-    "weapon_extinguisher",
-    "weapon_citizensuitcase",
-    "weapon_citizenpackage",
-    "weapon_brickbat"
+    "weapon_frag"
 }
 
 local MedList = {
+    "weapon_smg1",
     "weapon_ar2",
     "weapon_shotgun",
     "item_ammo_ar2_altfire",
@@ -101,15 +94,13 @@ local HighList = {
     "weapon_357",
     "weapon_crossbow",
     "weapon_rpg",
-    "weapon_physcannon",
-    "weapon_physgun"
 }
 
 hook.Add("OnNPCKilled", "DropWeaponOnNPCKilled", function(npc, killer)
         local rndweapon = nil
         chance = math.random(1,100)
-        if chance < 50 then return
-        elseif chance > 51 && chance < 70 then rndweapon = table.Random(AmmoList)
+        if chance < 55 then return
+        elseif chance > 56 && chance < 70 then rndweapon = table.Random(AmmoList)
         elseif chance > 71 && chance < 85 then rndweapon = table.Random(LowList)
         elseif chance > 86 && chance < 95 then rndweapon = table.Random(MedList)
         else rndweapon = table.Random(HighList) end

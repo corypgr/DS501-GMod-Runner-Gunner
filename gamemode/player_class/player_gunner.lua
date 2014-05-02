@@ -15,11 +15,11 @@ function PLAYER:Loadout()
 
 	self.Player:RemoveAllAmmo()
  
-    self.Player:GiveAmmo( 999, "smg1", true )
-	self.Player:GiveAmmo( 256,	"Pistol", true )
-	self.Player:Give( "weapon_smg1" )
-    self.Player:Give( "weapon_crowbar" )
-	self.Player:Give( "weapon_pistol" )
+--    self.Player:GiveAmmo( 999, "smg1", true )
+--	self.Player:GiveAmmo( 256,	"Pistol", true )
+--	self.Player:Give( "weapon_smg1" )
+--      self.Player:Give( "weapon_crowbar" )
+--	self.Player:Give( "weapon_pistol" )
 end
 
 player_manager.RegisterClass( "player_gunner", PLAYER, "player_default" )
