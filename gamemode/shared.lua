@@ -7,6 +7,7 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 util.PrecacheModel( ply_model )
+util.PrecacheModel( npc_model )
 function GM:Initialize()
 
 end 

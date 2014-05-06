@@ -5,10 +5,13 @@ stand_weight = 10
 walk_weight = 500
 
 --Type of NPC
-npc_model = "npc_alyx"
+npc_type = "npc_monk"
+
+-- Make "" if no extra model needed.
+npc_model = ""
 
 --Type of NPC weapon
-npc_weapon = "weapon_alyxgun"
+npc_weapon = "weapon_shotgun"
 
 --Player model location
 ply_model = "models/player/alyx.mdl"

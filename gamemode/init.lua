@@ -7,6 +7,7 @@ DEFINE_BASECLASS( "gamemode_base" )
 
 function GM:PlayerSpawn( ply )
 	player_manager.SetPlayerClass( ply, "player_custom" )
+	ply:SetPlayerColor(ply_color)
 	BaseClass.PlayerSpawn( self, ply )
 end
 
@@ -22,12 +23,15 @@ function GM:InitPostEntity()
 	
 	for i = 0,3,1 do
 		for k = 0,3,1 do
-			local npc_c = ents.Create( npc_model )
+			local npc_c = ents.Create( npc_type )
+			if (npc_model != nill and npc_model != '') then
+				npc_c:SetModel( npc_model )
+			end
 			npc_c:SetPos( Vector(60*i, 60*k, 0 ) )
 			npc_c:Spawn()
 			-- Make the npc ignore the players
 			npc_c:AddRelationship( "player D_NU 10" )
-			
+
 			-- Think is a function that is called every few frames.
 			hook.Add("Think", "NPCThink " .. tostring(npc_c), function()
 				-- Below can be used to figure out how fast the NPC walks/runs
@@ -89,7 +93,9 @@ function GM:EntityTakeDamage( ent, dmgInfo )
 		hook.Remove("Think", "NPCThink " .. tostring(ent))
 		ent:StopMoving()
 		
-		ent:Give( npc_weapon )
+		if( npc_weapon != nil and npc_weapon != '') then
+			ent:Give( npc_weapon )
+		end
 		
 		-- The npc will now only attack the entity that attacked it
 		ent:AddEntityRelationship(attacker, D_HT, 99 )
