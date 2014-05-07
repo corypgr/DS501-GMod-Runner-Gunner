@@ -39,7 +39,7 @@ function GM:InitPostEntity()
 				
 				-- Only do something new when the npc is not moving. Also, if the schedule
 				-- is set to SCHED_NONE, randomly decide when to start a new schedule
-				if(npc_c:GetMovementActivity() == -1 and 
+				if(pause == false and npc_c:GetMovementActivity() == -1 and 
 				  (not npc_c:IsCurrentSchedule(SCHED_NONE) or math.random(1,stand_weight) == 1)) then
 					
 					--Randomly choose the next action
@@ -82,6 +82,8 @@ function GM:PlayerButtonDown( ply, button )
 			ent:SetPos(ply:GetPos())
 			ply:SetPos(npcPos)
 		end
+	elseif( button == KEY_P ) then
+		pause = !pause
 	end
 end
 
