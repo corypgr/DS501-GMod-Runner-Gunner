@@ -13,10 +13,10 @@ function GM:InitPostEntity()
     for i = 0,10,1 do
         for k = 0,10,1 do
             local zombie
-            if k % 2 == 0 then
-            zombie= ents.Create( "npc_fastzombie" )
-            elseif k % 4 == 0 then
-             zombie= ents.Create( "npc_poisonzombie" )
+            if k % 4 == 0 then
+            zombie= ents.Create( "npc_poisonzombie" )
+            elseif k % 2 == 0 then
+             zombie= ents.Create( "npc_fastzombie" )
             else  
             zombie= ents.Create( "npc_zombie" )
             end 
