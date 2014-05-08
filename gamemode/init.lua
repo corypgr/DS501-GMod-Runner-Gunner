@@ -1,5 +1,6 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
+AddCSLuaFile( "player_class/player_custom.lua" )
 
 include("shared.lua")
 
