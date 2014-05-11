@@ -1,4 +1,4 @@
-include("shared.lua
+include("shared.lua")
 
 -- Turns off drawing player name and health. Client code
 function GM:HUDDrawTargetID()

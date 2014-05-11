@@ -8,6 +8,16 @@ GM.Website = "N/A"
 
 pause = true
 
+p1 = nil
+p1NPCList = {}
+p1First = 1
+p1Last = 1
+
+p2 = nil
+p2NPCList = {}
+p2First = 1
+p2Last = 1
+
 util.PrecacheModel( ply_model )
 util.PrecacheModel( npc_model )
 function GM:Initialize()
