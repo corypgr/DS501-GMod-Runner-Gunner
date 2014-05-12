@@ -8,8 +8,12 @@ GM.Website = "N/A"
 
 pause = true
 
+priority = 1
+
+seeker = nil
+
 util.PrecacheModel( ply_model )
-util.PrecacheModel( npc_model )
+--util.PrecacheModel( npc_model )
 function GM:Initialize()
 
 end 

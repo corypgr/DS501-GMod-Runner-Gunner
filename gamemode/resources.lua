@@ -20,8 +20,8 @@ ply_model = "models/player/alyx.mdl"
 ply_color = Vector(130/255, 110/255, 90/255)
 
 --Type of Player weapon
-ply_weapon = "weapon_smg1"
-ply_weapon_short = "smg1"
+ply_weapon = "weapon_357"
+ply_weapon_short = "357"
 ply_ammo_amount = 256
 
 --Walk and run speeds. Pulled from NPC values

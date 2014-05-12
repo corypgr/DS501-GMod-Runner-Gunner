@@ -22,8 +22,8 @@ function GM:InitPostEntity()
 	base:SetPos( Vector(366, -588, -333 ) )
 	base:Spawn()
 	
-	for i = 0,3,1 do
-		for k = 0,3,1 do
+	for i = 0,9,1 do
+		for k = 0,9,1 do
 			local npc_c = ents.Create( npc_type )
 			if (npc_model != nill and npc_model != '') then
 				npc_c:SetModel( npc_model )
@@ -31,7 +31,7 @@ function GM:InitPostEntity()
 			npc_c:SetPos( Vector(60*i, 60*k, 0 ) )
 			npc_c:Spawn()
 			-- Make the npc ignore the players
-			npc_c:AddRelationship( "player D_NU 10" )
+			npc_c:AddRelationship( "player D_NU " .. priority)
 
 			-- Think is a function that is called every few frames.
 			hook.Add("Think", "NPCThink " .. tostring(npc_c), function()
@@ -40,7 +40,7 @@ function GM:InitPostEntity()
 				
 				-- Only do something new when the npc is not moving. Also, if the schedule
 				-- is set to SCHED_NONE, randomly decide when to start a new schedule
-				if(pause == false and npc_c:GetMovementActivity() == -1 and 
+				if(pause == false and npc_c:IsValid() and npc_c:GetMovementActivity() == -1 and 
 				  (not npc_c:IsCurrentSchedule(SCHED_NONE) or math.random(1,stand_weight) == 1)) then
 					
 					--Randomly choose the next action
@@ -61,6 +61,7 @@ function GM:InitPostEntity()
 			end);
 		end
 	end
+	priority = priority + 1
 	print( "All Entities have initialized\n" )
 end
 
@@ -85,27 +86,21 @@ function GM:PlayerButtonDown( ply, button )
 		end
 	elseif( button == KEY_P ) then
 		pause = !pause
+	elseif( button == KEY_M ) then
+		seeker = ply
 	end
 end
 
 function GM:EntityTakeDamage( ent, dmgInfo )
     local attacker = dmgInfo:GetAttacker()
-	if ent:IsNPC() and ent:GetEnemy() != attacker then
-		
-		-- Stop the random walks
+	
+	if(ent:IsNPC()) then
 		hook.Remove("Think", "NPCThink " .. tostring(ent))
 		ent:StopMoving()
-		
-		if( npc_weapon != nil and npc_weapon != '') then
-			ent:Give( npc_weapon )
-		end
-		
-		-- The npc will now only attack the entity that attacked it
-		ent:AddEntityRelationship(attacker, D_HT, 99 )
-		ent:SetEnemy(attacker)
-		
-		-- This lets the npc find you faster
-		ent:UpdateEnemyMemory( attacker, attacker:GetPos() )
-		print("relationship changed")
+		ent:ClearSchedule()
+		--ent:SetSchedule(SCHED_DIE_RAGDOLL)
+		ent:SetNPCState(NPC_STATE_DEAD)
+	elseif(ent != seeker) then
+		ent:Kill()
 	end
 end
