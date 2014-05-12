@@ -69,6 +69,27 @@ function GM:InitPostEntity()
     end
     end
 
+    x = -600
+    y = -30
+    z = 800
+
+    for i = 0,5,1 do
+    for k = 0,5,1 do
+    local zombie
+    if k % 4 == 0 then
+    zombie= ents.Create( "npc_poisonzombie" )
+    elseif k % 2 == 0 then
+    zombie= ents.Create( "npc_fastzombie" )
+    else  
+    zombie= ents.Create( "npc_zombie" )
+    end 
+    zombie:SetPos( Vector(x + 60*i, y + 60*k, z ) )
+    zombie:Spawn()
+    zombie:AddRelationship( "player D_HT 99" )
+    end
+    end
+
+
     x = 880
     y = -450
     z = 1300
