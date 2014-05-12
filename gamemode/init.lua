@@ -10,6 +10,13 @@ function GM:PlayerSpawn( ply )
 end
 
 function GM:InitPostEntity()
+
+
+    local base = ents.Create("base")
+    base:SetPos( Vector(140.885, 231.031, 929 ) )
+    base:Spawn()
+
+
     for i = 0,10,1 do
         for k = 0,10,1 do
             local zombie
@@ -20,7 +27,7 @@ function GM:InitPostEntity()
             else  
             zombie= ents.Create( "npc_zombie" )
             end 
-            zombie:SetPos( Vector(60*i, 60*k, 0 ) )
+            zombie:SetPos( Vector(478+i*60, 206+k*60, 97 ) )
             zombie:Spawn()
             -- Make the zombie ignore the players
             zombie:AddRelationship( "player D_HT 10" )
@@ -29,6 +36,68 @@ function GM:InitPostEntity()
 --            zombie:SetCurrentWeaponProficiency( WEAPON_PROFICIENCY_POOR);
         end
     end
+
+
+    for i = 0,10,1 do
+        for k = 0,10,1 do
+            local zombie
+            if k % 4 == 0 then
+            zombie= ents.Create( "npc_poisonzombie" )
+            elseif k % 2 == 0 then
+             zombie= ents.Create( "npc_fastzombie" )
+            else  
+            zombie= ents.Create( "npc_zombie" )
+            end 
+            zombie:SetPos( Vector(-1915+i*60, -206+k*60, -326 ) )
+            zombie:Spawn()
+            -- Make the zombie ignore the players
+            zombie:AddRelationship( "player D_HT 10" )
+            zombie:AddRelationship( "npc_zombie D_NU 10" )
+          --  zombie:Give("weapon_alyxgun")
+--            zombie:SetCurrentWeaponProficiency( WEAPON_PROFICIENCY_POOR);
+        end
+    end
+
+    for i = 0,10,1 do
+        for k = 0,10,1 do
+            local zombie
+            if k % 4 == 0 then
+            zombie= ents.Create( "npc_poisonzombie" )
+            elseif k % 2 == 0 then
+             zombie= ents.Create( "npc_fastzombie" )
+            else  
+            zombie= ents.Create( "npc_zombie" )
+            end 
+            zombie:SetPos( Vector(-390+i*60, 82+k*60, 60 ) )
+            zombie:Spawn()
+            -- Make the zombie ignore the players
+            zombie:AddRelationship( "player D_HT 10" )
+            zombie:AddRelationship( "npc_zombie D_NU 10" )
+          --  zombie:Give("weapon_alyxgun")
+--            zombie:SetCurrentWeaponProficiency( WEAPON_PROFICIENCY_POOR);
+        end
+    end
+
+    for i = 0,10,1 do
+        for k = 0,10,1 do
+            local zombie
+            if k % 4 == 0 then
+            zombie= ents.Create( "npc_poisonzombie" )
+            elseif k % 2 == 0 then
+             zombie= ents.Create( "npc_fastzombie" )
+            else  
+            zombie= ents.Create( "npc_zombie" )
+            end 
+            zombie:SetPos( Vector(-125+i*60, -323+k*60, 64 ) )
+            zombie:Spawn()
+            -- Make the zombie ignore the players
+            zombie:AddRelationship( "player D_HT 10" )
+            zombie:AddRelationship( "npc_zombie D_NU 10" )
+          --  zombie:Give("weapon_alyxgun")
+--            zombie:SetCurrentWeaponProficiency( WEAPON_PROFICIENCY_POOR);
+        end
+    end
+
 
     local ent = ents.Create("weapon_crowbar") 
     ent:SetPos(Vector(-20,-20, 0)) 
