@@ -59,6 +59,8 @@ function GM:PlayerButtonDown( ply, button )
 			ent:SetPos(ply:GetPos())
 			ply:SetPos(npcPos)
 		end
+	elseif( button == KEY_C ) then
+		getNPCCounts(ply)
 	elseif( button == KEY_P ) then
 		local allNPCs = ents.FindByClass("npc_*")
 		local nonTeamNPCs = {}
@@ -128,6 +130,33 @@ function GM:EntityTakeDamage( ent, dmgInfo )
 			-- For when you hit the same npc twice
 			removeNPCFromP2List(-1, ent, p2)
 		end
+	end
+end
+
+function getNPCCounts(ply) 
+	local count = 0
+	local allNPCs = ents.FindByClass("npc_*")
+	for k, v in pairs(allNPCs) do
+		if(v:IsValid() and onTeam(v) == false) then
+			count = count + 1
+		end
+	end
+	ply:PrintMessage(HUD_PRINTTALK, "NPC Counts:\nNon-team: ".. count)
+	count = 0
+	for i = p1Last, p1First-1, 1 do
+		if(p1NPCList[i]:IsValid()) then
+			count = count + 1
+		end
+	end
+	ply:PrintMessage(HUD_PRINTTALK, p1:GetName() .. ": " .. count)
+	count = 0
+	if(p2 != nil) then
+		for i = p2Last, p2First-1, 1 do
+			if(p2NPCList[i]:IsValid()) then
+				count = count + 1
+			end
+		end
+		ply:PrintMessage(HUD_PRINTTALK, p2:GetName() ..": " .. count)
 	end
 end
 
