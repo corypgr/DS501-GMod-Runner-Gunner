@@ -35,8 +35,17 @@ function GM:InitPostEntity()
 			if (npc_model != nill and npc_model != '') then
 				npc_c:SetModel( npc_model )
 			end
-			npc_c:SetPos( Vector(60*i, 60*k, 0 ) )
-			npc_c:Spawn()
+			if(k%2 == 0) then
+				npc_c:SetPos( Vector(60*i, 60*k + 1000, 0 ) )
+				npc_c:Spawn()
+				p1NPCList[p1First] = npc_c
+				p1First = p1First + 1
+			else
+				npc_c:SetPos( Vector(60*i, 60*k, 0 ) )
+				npc_c:Spawn()
+				p2NPCList[p2First] = npc_c
+				p2First = p2First + 1
+			end
 			-- Make the npc ignore the players and other NPCs
 			npc_c:AddRelationship( "player D_NU 10" )
 			npc_c:AddRelationship( "npc D_NU 10" )
@@ -61,48 +70,12 @@ function GM:PlayerButtonDown( ply, button )
 		end
 	elseif( button == KEY_C ) then
 		getNPCCounts(ply)
-	elseif( button == KEY_P ) then
-		local allNPCs = ents.FindByClass("npc_*")
-		local nonTeamNPCs = {}
-		for k, v in pairs(allNPCs) do
-			if(v:IsValid() and onTeam(v) == false) then
-				table.insert(nonTeamNPCs, v)
-			end
-		end
-		
-		-- all npcs not on teams hate all npcs on teams and vice versa
-		for k, v in pairs(nonTeamNPCs) do
-			for i = p1Last, p1First-1, 1 do
-				if(p1NPCList[i]:IsValid()) then
-					v:AddEntityRelationship(p1NPCList[i], D_HT, 99 )
-					p1NPCList[i]:AddEntityRelationship(v, D_HT, 99 )
-				end
-			end
-			for i = p2Last, p2First-1, 1 do
-				if(p2NPCList[i]:IsValid()) then
-					v:AddEntityRelationship(p2NPCList[i], D_HT, 99 )
-					p2NPCList[i]:AddEntityRelationship(v, D_HT, 99 )
-				end
-			end
-		end
-		
-		-- the two teams hate each other
-		for k = p1Last, p1First-1, 1 do
-			if(p1NPCList[k]:IsValid()) then
-				for i = p2Last, p2First-1, 1 do
-					if(p2NPCList[i]:IsValid()) then
-						p1NPCList[k]:AddEntityRelationship(p2NPCList[i], D_HT, 99 )
-						p2NPCList[i]:AddEntityRelationship(p1NPCList[k], D_HT, 99 )
-					end
-				end
-			end
-		end
 	end
 end
 
 function GM:EntityTakeDamage( ent, dmgInfo )
     local attacker = dmgInfo:GetAttacker()
-	if ent:IsNPC() and dmgInfo:GetDamageType() == DMG_CLUB then -- dmgInfo:GetAmmoType() == -1 then
+	if ent:IsNPC() and dmgInfo:GetAmmoType() == 3 then -- dmgInfo:GetAmmoType() == -1 then
 		if(attacker == p1) then
 			p1NPCList[p1First] = ent
 			p1First = p1First + 1
@@ -130,6 +103,46 @@ function GM:EntityTakeDamage( ent, dmgInfo )
 			-- For when you hit the same npc twice
 			removeNPCFromP2List(-1, ent, p2)
 		end
+		
+		-- the two teams hate each other
+		for k = p1Last, p1First-1, 1 do
+			if(p1NPCList[k]:IsValid()) then
+				p1NPCList[k]:AddEntityRelationship(p2, D_HT, 99 )
+				for i = p2Last, p2First-1, 1 do
+					if(p2NPCList[i]:IsValid()) then
+						p1NPCList[k]:AddEntityRelationship(p2NPCList[i], D_HT, 99 )
+						p2NPCList[i]:AddEntityRelationship(p1NPCList[k], D_HT, 99 )
+						p2NPCList[i]:AddEntityRelationship(p1, D_HT, 99 )
+					end
+				end
+			end
+		end
+		
+		for k = p1Last, p1First-1, 1 do
+			if(p1NPCList[k]:IsValid()) then
+				p1NPCList[k]:AddEntityRelationship(p1, D_NU, 99 )
+				for i = p1Last, p1First-1, 1 do
+					if(p1NPCList[i]:IsValid()) then
+						p1NPCList[k]:AddEntityRelationship(p1NPCList[i], D_NU, 99 )
+					end
+				end
+			end
+		end
+		
+		for k = p2Last, p2First-1, 1 do
+			if(p2NPCList[k]:IsValid()) then
+				p2NPCList[k]:AddEntityRelationship(p2, D_NU, 99 )
+				for i = p2Last, p2First-1, 1 do
+					if(p2NPCList[i]:IsValid()) then
+						p2NPCList[k]:AddEntityRelationship(p2NPCList[i], D_NU, 99 )
+					end
+				end
+			end
+		end
+	end
+	if (dmgInfo:GetAmmoType() == 3) then
+		dmgInfo:ScaleDamage(0)
+		return dmgInfo
 	end
 end
 
